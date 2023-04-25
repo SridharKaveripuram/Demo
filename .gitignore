@@ -31,3 +31,5 @@ modulesbin/
 tempbin/
 
 AppData/
+
+.vs/

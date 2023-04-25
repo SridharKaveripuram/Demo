@@ -1,12 +1,22 @@
 ﻿using Common;
 using Confluent.Kafka;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace EmpDataProducer
 {
     public class MessageProducer : BackgroundService
     {
-        
+        private readonly IConfiguration _configuration;
+        private readonly ILogger<MessageProducer> _logger;
+
+        public MessageProducer(ILogger<MessageProducer> logger,
+                             IConfiguration configuration)
+        {
+            _logger = logger;
+            _configuration = configuration;
+        }
+
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             using
@@ -16,22 +26,34 @@ namespace EmpDataProducer
             var randomHourlyRate = new Random();
             var randomHoursWorked = new Random();
 
-
-            while (true)
+            try
             {
-                await Task.Delay(1000);
-                var emp = new Employee
+                while (!stoppingToken.IsCancellationRequested)
                 {
-                    Name = "Employee" + randomId.Next().ToString(),
-                    HourlyRate = randomHourlyRate.Next(1, 10),
-                    HoursWorked = randomHoursWorked.Next(1, 8)
-                };
-                var message = new Message<Null,string>
-                {
-                    Value = JsonConvert.SerializeObject(emp)
-                };
-                await producer.ProduceAsync("topic-employee", message);                
+                    await Task.Delay(1000);
+                    var emp = new Employee
+                    {
+                        Name = "Employee" + randomId.Next().ToString(),
+                        HourlyRate = randomHourlyRate.Next(1, 10),
+                        HoursWorked = randomHoursWorked.Next(1, 8)
+                    };
+                    var message = new Message<Null, string>
+                    {
+                        Value = JsonConvert.SerializeObject(emp)
+                    };                    
+                    await producer.ProduceAsync(_configuration.GetValue<string>("ProducerTopic"), message);                    
+                    _logger.LogTrace($"Message published {message.Value}");
+                }
+            } 
+            catch (OperationCanceledException opex)
+            {
+                _logger.LogCritical("Exception occured", opex.Message);
             }
+            finally
+            {
+                producer.Dispose();
+            }
+
         }
 
         protected ProducerConfig GetConfig()

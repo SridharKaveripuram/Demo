@@ -25,8 +25,8 @@ namespace EmpdataConsumer
         protected async override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             
-            using var consumer = new ConsumerBuilder<Ignore,string>(GetConfig()).Build();
-            consumer.Subscribe(_configuration.GetValue <string>("ProducerTopic"));
+            using var consumer = new ConsumerBuilder<Ignore,string>(GetConfig()).Build();            
+            consumer.Subscribe(_configuration.GetValue <string>("ConsumerTopic"));
             try
             {
                 Employee? emp = null;
@@ -52,9 +52,14 @@ namespace EmpdataConsumer
             {
                 _logger.LogCritical("Exception occured", opex.Message);
             }
+            catch(Exception exp)
+            {
+                _logger.LogCritical("Exception occured", exp.Message);
+            }
             finally
             {
-                consumer.Close();                
+                consumer.Close();
+                consumer.Dispose();
             }            
         }
 
