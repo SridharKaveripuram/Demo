@@ -6,7 +6,8 @@ Improvements yet to be done
 4. Add Versioning
 5. Even the SignalURL has to be pushed to be part of secrets.
 
-Note:- Docker compose file was picked up from confluent web site for demo purpose.
+Note:- 1.Docker compose file was picked up from confluent web site for demo purpose.
+       2. Uploaded the code from my laptop with my sons login unfortunately hence author appears as prahl(his name is prahlad)    
 
 
 Things that were done
