@@ -13,7 +13,8 @@ try
     builder.Services.AddSignalR();
     builder.Services.AddSingleton<EmployeeHub>();
     builder.Services.AddDbContext<EmployeeDbContext>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("EmployeeDB")));
+            options.UseSqlServer(builder.Configuration.GetConnectionString("EmployeeDB"),
+            b=>b.MigrationsAssembly("Common")));
 
 
     builder.Services.AddDbContext<EmployeeDbContext>();
