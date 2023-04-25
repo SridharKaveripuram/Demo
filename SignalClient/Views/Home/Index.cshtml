@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Employees DashBoard";
+}
+
+<div class="text-center">
+    <h3>Employees</h3>
+</div>
+
+<div class="row text-center">
+    <div class="col-md-12"><textarea id="employeesResult" rows="15" cols="100">Connecting...</textarea></div>
+</div>
+
+<div class="text-center">
+    <div>
+        <input id="startButton" type="button" value="Start" class="btn-primary" />
+        <input id="stopButton" type="button" value="Stop" class="btn-secondary" />
+    </div>
+</div>
+<input id="webSocketUrl" type="hidden" value=@ViewBag.WebSocketUrl />
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+<script src="~/js/employeesignalrclient.js"></script>
